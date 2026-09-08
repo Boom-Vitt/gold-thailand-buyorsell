@@ -1,0 +1,3 @@
+.claude/
+*.lock
+.DS_Store

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ราคาทองรูปพรรณ เยาวราช วันนี้ — ควรซื้อหรือขาย?</title>
+<meta name="description" content="ราคาทองรูปพรรณ 96.5% วันนี้จากสมาคมค้าทองคำ พร้อมสัญญาณ ซื้อ/รอ/ขาย แบบโปร่งใส กราฟย้อนหลัง 5 ปี และเครื่องคิดจุดคุ้มทุน">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#faf7f0;--card:#fff;--ink:#1f1a12;--muted:#6b6357;--gold:#b8860b;--gold2:#f3e2a8;--up:#178a3b;--down:#c62828;--wait:#8a6d0b;--line:#e8e0cf}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Sarabun,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  main{max-width:640px;margin:0 auto;padding:16px}
+  h1{font-size:1.35rem;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .price{font-size:1.7rem;font-weight:700;line-height:1.1}
+  .lbl{font-size:.85rem;color:var(--muted)}
+  .chg{font-size:.9rem;font-weight:500}
+  .up{color:var(--up)}.down{color:var(--down)}
+  .badge{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--gold2);color:#6b4e00;margin-left:6px;vertical-align:middle}
+  .verdict{font-size:2rem;font-weight:700;margin:4px 0}
+  .verdict.buy{color:var(--up)}.verdict.sell{color:var(--down)}.verdict.wait{color:var(--wait)}
+  .score{display:flex;gap:16px;font-size:.9rem;color:var(--muted);margin-bottom:10px}
+  details summary{cursor:pointer;color:var(--gold);font-weight:500}
+  ul.rules{list-style:none;padding:0;margin:8px 0 0;font-size:.9rem}
+  ul.rules li{padding:3px 0}
+  ul.rules li::before{content:"○ ";color:#bbb}
+  ul.rules li.on::before{content:"● ";color:var(--gold)}
+  .ranges{display:flex;gap:6px;margin-bottom:8px}
+  .ranges button,button.go{font:inherit;border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 12px;cursor:pointer}
+  .ranges button.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+  button.go{background:var(--gold);color:#fff;border-color:var(--gold);padding:8px 16px;width:100%;margin-top:8px}
+  label{display:block;font-size:.85rem;color:var(--muted);margin-top:8px}
+  input{font:inherit;width:100%;padding:8px;border:1px solid var(--line);border-radius:8px}
+  .result{margin-top:10px;padding:10px;border-radius:10px;background:var(--bg);font-size:.95rem}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  .foot{font-size:.8rem;color:var(--muted)}
+  .err{background:#fdecea;color:#7a1b1b;padding:10px;border-radius:10px}
+  canvas{max-height:260px}
+</style>
+</head>
+<body>
+<main>
+  <h1>ราคาทองรูปพรรณ เยาวราช วันนี้</h1>
+  <p class="sub" id="asof">กำลังโหลด…</p>
+
+  <div id="error" class="err" hidden></div>
+
+  <section class="card">
+    <div class="lbl" style="margin-bottom:6px">ทองรูปพรรณ 96.5% <span class="badge">ต่อ 1 บาททอง (15.16 กรัม)</span></div>
+    <div class="grid">
+      <div><div class="lbl">ขายออก (ราคาที่คุณซื้อ)</div><div class="price" id="orn_sell">–</div><div class="chg" id="orn_sell_chg"></div></div>
+      <div><div class="lbl">รับซื้อ (ราคาที่ร้านรับคืน)</div><div class="price" id="orn_buy">–</div><div class="chg" id="orn_buy_chg"></div></div>
+    </div>
+    <div class="lbl" style="margin:14px 0 6px">ทองคำแท่ง 96.5%</div>
+    <div class="grid">
+      <div><div class="lbl">ขายออก</div><div class="price" id="bar_sell" style="font-size:1.2rem">–</div></div>
+      <div><div class="lbl">รับซื้อ</div><div class="price" id="bar_buy" style="font-size:1.2rem">–</div></div>
+    </div>
+    <p class="foot" style="margin:12px 0 0">ราคาจริงที่ร้านเยาวราช = ขายออก + ค่ากำเหน็จ (ปกติ 300–1,500 บาท/ชิ้น แล้วแต่ลาย) และเมื่อขายคืนจะได้ราคา "รับซื้อ" โดยไม่ได้ค่ากำเหน็จคืน</p>
+  </section>
+
+  <section class="card">
+    <div class="lbl">สัญญาณวันนี้ (กฎคะแนน ไม่ใช่การพยากรณ์)</div>
+    <div class="verdict wait" id="verdict">–</div>
+    <div class="score"><span>คะแนนฝั่งซื้อ <b id="bscore">–</b>/5</span><span>คะแนนฝั่งขาย <b id="sscore">–</b>/5</span></div>
+    <p id="advice" style="margin:0 0 8px;font-size:.95rem"></p>
+    <details><summary>ดูกฎที่ใช้คิดคะแนน</summary>
+      <div class="lbl" style="margin-top:8px">เงื่อนไขฝั่งซื้อ (ราคาถูกเมื่อเทียบอดีต)</div><ul class="rules" id="buyrules"></ul>
+      <div class="lbl" style="margin-top:8px">เงื่อนไขฝั่งขาย (ราคาแพงเมื่อเทียบอดีต)</div><ul class="rules" id="sellrules"></ul>
+      <p class="foot">ซื้อ = ครบ 4 ข้อ, ทยอยซื้อ = 3 ข้อ, ขาย = ครบ 4 ข้อ, พิจารณาขาย = 3 ข้อ, นอกนั้น = รอ • คำนวณจากราคาขายออกทองรูปพรรณรายวัน</p>
+    </details>
+  </section>
+
+  <section class="card">
+    <div class="ranges"><button data-r="90">3 เดือน</button><button data-r="365" class="on">1 ปี</button><button data-r="99999">5 ปี</button></div>
+    <canvas id="chart"></canvas>
+    <p class="foot" id="chartnote"></p>
+  </section>
+
+  <section class="card">
+    <div class="lbl">ทองที่ถืออยู่ ขายตอนนี้คุ้มไหม?</div>
+    <label>ซื้อมาที่ราคาขายออก (บาท ต่อ 1 บาททอง)<input id="p" type="number" inputmode="decimal" placeholder="เช่น 69400"></label>
+    <label>น้ำหนัก (บาททอง — 1 สลึง = 0.25)<input id="w" type="number" inputmode="decimal" step="0.25" value="1"></label>
+    <label>ค่ากำเหน็จรวมที่จ่ายไป (บาท)<input id="k" type="number" inputmode="decimal" placeholder="เช่น 800"></label>
+    <label>กำไรที่อยากได้ (%)<input id="t" type="number" inputmode="decimal" value="5"></label>
+    <button class="go" id="calc">คำนวณ</button>
+    <div class="result" id="calcout" hidden></div>
+  </section>
+
+  <section class="card">
+    <div class="lbl">กฎนี้ใช้ได้จริงแค่ไหน? (ทดสอบย้อนหลังกับข้อมูลที่มี)</div>
+    <table id="bt"><thead><tr><th>ซื้อแล้วถือ</th><th>ซื้อตามสัญญาณ: กำไร%ของครั้ง</th><th>เฉลี่ย</th><th>ซื้อสุ่มวันไหนก็ได้</th><th>เฉลี่ย</th></tr></thead><tbody></tbody></table>
+    <p class="foot">กำไรคิดหลังหักส่วนต่างขายออก/รับซื้อแล้ว แต่ยังไม่รวมค่ากำเหน็จ • ถ้าสองคอลัมน์ต่างกันน้อย แปลว่ากฎนี้ช่วยได้ไม่มาก — ผลในอดีตไม่รับประกันอนาคต</p>
+  </section>
+
+  <p class="foot" id="spot"></p>
+  <p class="foot">ข้อมูลราคาจากสมาคมค้าทองคำ (goldtraders.or.th) ผ่าน api.chnwt.dev • เว็บนี้จัดทำเพื่อให้ข้อมูลเท่านั้น ไม่ใช่คำแนะนำการลงทุน การซื้อขายทองมีความเสี่ยง โปรดตัดสินใจด้วยตนเอง</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="signal.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => n == null ? '–' : n.toLocaleString('th-TH', {maximumFractionDigits: 0});
+const thDate = iso => new Date(iso + 'T00:00:00').toLocaleDateString('th-TH', {day: 'numeric', month: 'short', year: 'numeric'});
+const chg = (el, now, prev) => { if (prev == null) return; const d = now - prev; el.textContent = (d >= 0 ? '▲ +' : '▼ ') + fmt(d) + ' จากเมื่อวาน'; el.className = 'chg ' + (d >= 0 ? 'up' : 'down'); };
+let chart, rows = [];
+
+function drawChart(days) {
+  const r = rows.slice(-days);
+  const prices = r.map(x => x.orn_sell);
+  const sma50 = prices.map((_, i) => i < 49 ? null : prices.slice(i - 49, i + 1).reduce((a, b) => a + b, 0) / 50);
+  const est = r.map(x => x.est);
+  if (chart) chart.destroy();
+  chart = new Chart($('chart'), {
+    type: 'line',
+    data: { labels: r.map(x => x.d), datasets: [
+      { label: 'ขายออก ทองรูปพรรณ', data: prices, borderColor: '#b8860b', borderWidth: 2, pointRadius: 0, tension: .2,
+        segment: { borderDash: c => est[c.p1DataIndex] ? [4, 4] : undefined } },
+      { label: 'เฉลี่ย 50 วัน', data: sma50, borderColor: '#999', borderWidth: 1, pointRadius: 0, borderDash: [2, 3] }] },
+    options: { animation: false, interaction: { mode: 'index', intersect: false },
+      scales: { x: { ticks: { maxTicksLimit: 6, callback: (v, i) => thDate(r[i].d) } }, y: { ticks: { callback: v => fmt(v) } } },
+      plugins: { legend: { labels: { boxWidth: 12 } }, tooltip: { callbacks: { title: it => thDate(it[0].label) + (est[it[0].dataIndex] ? ' (ประมาณ)' : '') } } } }
+  });
+  const nEst = est.filter(Boolean).length;
+  $('chartnote').textContent = nEst ? `เส้นประ = ราคาโดยประมาณจากราคาทองโลก × ค่าเงินบาท (${nEst} วัน) ก่อนที่เว็บนี้จะเริ่มเก็บราคาจริงรายวัน` : 'ราคาจริงจากสมาคมค้าทองคำทุกวัน';
+}
+
+function calc() {
+  const P = +$('p').value, w = +$('w').value || 1, K = +$('k').value || 0, t = (+$('t').value || 0) / 100;
+  if (!P) return;
+  localStorage.setItem('hold', JSON.stringify({P, w, K, t}));
+  const be = Signal.breakEven(P, K, w, t, rows[rows.length - 1].orn_buy);
+  $('calcout').hidden = false;
+  $('calcout').innerHTML = `ต้นทุนรวม <b>${fmt(be.cost)}</b> บาท • ขายวันนี้ได้ <b>${fmt(be.valueNow)}</b> บาท → ${be.profit >= 0 ? '<span class="up">กำไร' : '<span class="down">ขาดทุน'} ${fmt(Math.abs(be.profit))} บาท (${(be.profitPct * 100).toFixed(1)}%)</span><br>` +
+    (be.ok ? `<b class="up">ถึงเป้าแล้ว</b> — ราคารับซื้อวันนี้สูงกว่าจุดคุ้มทุน + กำไรเป้าหมาย (${fmt(be.need)} บาท/บาททอง)` : `ต้องรอราคารับซื้อรูปพรรณ ≥ <b>${fmt(be.need)}</b> บาท/บาททอง (ตอนนี้ ${fmt(rows[rows.length - 1].orn_buy)}) จึงจะได้กำไรตามเป้า`);
+}
+
+async function main() {
+  let d;
+  try { d = await (await fetch('api.php', {cache: 'no-store'})).json(); } catch (e) { $('error').hidden = false; $('error').textContent = 'โหลดข้อมูลไม่ได้: ' + e; return; }
+  if (d.error) { $('error').hidden = false; $('error').textContent = 'หมายเหตุ: ' + d.error; }
+  rows = d.history; const L = d.latest; if (!L) return;
+  $('asof').innerHTML = `${thDate(L.date)} เวลา ${L.time} น.${L.round ? ' (ครั้งที่ ' + L.round + ')' : ''} • ${L.source}` + (L.est ? '<span class="badge">ประมาณการ</span>' : '');
+  ['orn_sell', 'orn_buy', 'bar_sell', 'bar_buy'].forEach(k => $(k).textContent = fmt(L[k]));
+  const prev = rows.length > 1 ? rows[rows.length - 2] : null;
+  if (prev) { chg($('orn_sell_chg'), L.orn_sell, prev.orn_sell); chg($('orn_buy_chg'), L.orn_buy, prev.orn_buy); }
+
+  const ind = Signal.indicators(rows.map(x => x.orn_sell));
+  const s = Signal.score(ind);
+  $('verdict').textContent = s.verdict; $('verdict').className = 'verdict ' + s.tone;
+  $('bscore').textContent = s.buyScore; $('sscore').textContent = s.sellScore;
+  const advice = { buy: 'ราคาตอนนี้ต่ำเมื่อเทียบกับช่วงที่ผ่านมา ถ้าตั้งใจซื้อทองรูปพรรณอยู่แล้ว ถือเป็นจังหวะที่ดีกว่าค่าเฉลี่ย — ต่อรองค่ากำเหน็จด้วย',
+    sell: 'ราคาตอนนี้สูงเมื่อเทียบกับช่วงที่ผ่านมา ถ้ามีทองที่ถืออยู่และกำไรเกินค่ากำเหน็จแล้ว (ดูเครื่องคิดด้านล่าง) เป็นจังหวะที่ขายได้',
+    wait: 'ราคาอยู่ในช่วงกลาง ๆ ไม่ถูกไม่แพงชัดเจน ถ้าจะซื้ออาจทยอยซื้อทีละน้อย (DCA) หรือรอราคาย่อ' }[s.tone];
+  $('advice').textContent = advice + ` • RSI ${ind.rsi14?.toFixed(0)} • อยู่ที่ ${(ind.pct52 * 100).toFixed(0)}% ของช่วง 52 สัปดาห์ • แนวโน้มระยะยาว${ind.trend200 > 0 ? 'ขาขึ้น' : ind.trend200 < 0 ? 'ขาลง' : 'ทรงตัว'}`;
+  $('buyrules').innerHTML = s.buy.map(r => `<li class="${r[1] ? 'on' : ''}">${r[0]}</li>`).join('');
+  $('sellrules').innerHTML = s.sell.map(r => `<li class="${r[1] ? 'on' : ''}">${r[0]}</li>`).join('');
+
+  drawChart(365);
+  document.querySelectorAll('.ranges button').forEach(b => b.onclick = () => { document.querySelectorAll('.ranges button').forEach(x => x.classList.remove('on')); b.classList.add('on'); drawChart(+b.dataset.r); });
+
+  $('bt').querySelector('tbody').innerHTML = [90, 180, 365].map(h => { const b = Signal.backtest(rows, h); const p = v => v == null ? '–' : (v * 100).toFixed(0) + '%';
+    return `<tr><td>${h} วัน</td><td>${p(b.sigWinRate)} (${b.sigN} ครั้ง)</td><td>${p(b.sigAvg)}</td><td>${p(b.allWinRate)}</td><td>${p(b.allAvg)}</td></tr>`; }).join('');
+
+  if (d.spot) $('spot').textContent = `ราคาทองโลก ${d.spot.xau_usd.toFixed(0)} USD/oz • USD/THB ${d.spot.usd_thb.toFixed(2)} • อัปเดตข้อมูล ${new Date(d.updated_at).toLocaleString('th-TH')}`;
+  try { const h = JSON.parse(localStorage.getItem('hold')); if (h) { $('p').value = h.P; $('w').value = h.w; $('k').value = h.K; $('t').value = h.t * 100; calc(); } } catch (e) {}
+  $('calc').onclick = calc;
+}
+main();
+</script>
+</body>
+</html>
