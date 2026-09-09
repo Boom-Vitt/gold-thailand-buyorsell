@@ -7,6 +7,7 @@ declare(strict_types=1);
 date_default_timezone_set('Asia/Bangkok');
 
 const DATA_FILE = __DIR__ . '/data/prices.json';
+const SEED_FILE = __DIR__ . '/data/seed.json';
 const STALE_SEC = 600;                       // refresh ราคาล่าสุดอย่างมากทุก 10 นาที
 const G_PER_BAHT_BAR = 15.244;               // 1 บาททองคำแท่ง
 const G_PER_OZ = 31.1035;
@@ -33,8 +34,10 @@ function http_get(string $url): ?string {
 function jget(string $url): ?array { $r = http_get($url); $j = $r ? json_decode($r, true) : null; return is_array($j) ? $j : null; }
 function num(string $s): float { return (float) str_replace(',', '', $s); }
 
+// prices.json = ไฟล์ที่ server เขียน (ไม่อยู่ใน git); seed.json = ข้อมูลตั้งต้นที่มากับ repo
 function load(): array {
-    $j = is_file(DATA_FILE) ? json_decode((string) file_get_contents(DATA_FILE), true) : null;
+    $f = is_file(DATA_FILE) ? DATA_FILE : SEED_FILE;
+    $j = is_file($f) ? json_decode((string) file_get_contents($f), true) : null;
     return is_array($j) ? $j : ['updated_at' => null, 'latest' => null, 'spot' => null, 'history' => []];
 }
 function save(array $d): void {

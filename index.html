@@ -95,7 +95,7 @@
 
   <section class="card">
     <div class="lbl">กฎนี้ใช้ได้จริงแค่ไหน? (ทดสอบย้อนหลังกับข้อมูลที่มี)</div>
-    <table id="bt"><thead><tr><th>ซื้อแล้วถือ</th><th>ซื้อตามสัญญาณ: กำไร%ของครั้ง</th><th>เฉลี่ย</th><th>ซื้อสุ่มวันไหนก็ได้</th><th>เฉลี่ย</th></tr></thead><tbody></tbody></table>
+    <table id="bt"><thead><tr><th>ถือนาน</th><th>ตามสัญญาณ<br>ได้กำไร</th><th>เฉลี่ย</th><th>ซื้อวันไหนก็ได้<br>ได้กำไร</th><th>เฉลี่ย</th></tr></thead><tbody></tbody></table>
     <p class="foot">กำไรคิดหลังหักส่วนต่างขายออก/รับซื้อแล้ว แต่ยังไม่รวมค่ากำเหน็จ • ถ้าสองคอลัมน์ต่างกันน้อย แปลว่ากฎนี้ช่วยได้ไม่มาก — ผลในอดีตไม่รับประกันอนาคต</p>
   </section>
 
@@ -109,7 +109,7 @@
 const $ = id => document.getElementById(id);
 const fmt = n => n == null ? '–' : n.toLocaleString('th-TH', {maximumFractionDigits: 0});
 const thDate = iso => new Date(iso + 'T00:00:00').toLocaleDateString('th-TH', {day: 'numeric', month: 'short', year: 'numeric'});
-const chg = (el, now, prev) => { if (prev == null) return; const d = now - prev; el.textContent = (d >= 0 ? '▲ +' : '▼ ') + fmt(d) + ' จากเมื่อวาน'; el.className = 'chg ' + (d >= 0 ? 'up' : 'down'); };
+const chg = (el, now, prev, prevEst) => { if (prev == null) return; const d = now - prev; el.textContent = (d >= 0 ? '▲ +' : '▼ ') + fmt(d) + ' จากวันก่อน' + (prevEst ? ' (ประมาณ)' : ''); el.className = 'chg ' + (d >= 0 ? 'up' : 'down'); };
 let chart, rows = [];
 
 function drawChart(days) {
@@ -150,7 +150,7 @@ async function main() {
   $('asof').innerHTML = `${thDate(L.date)} เวลา ${L.time} น.${L.round ? ' (ครั้งที่ ' + L.round + ')' : ''} • ${L.source}` + (L.est ? '<span class="badge">ประมาณการ</span>' : '');
   ['orn_sell', 'orn_buy', 'bar_sell', 'bar_buy'].forEach(k => $(k).textContent = fmt(L[k]));
   const prev = rows.length > 1 ? rows[rows.length - 2] : null;
-  if (prev) { chg($('orn_sell_chg'), L.orn_sell, prev.orn_sell); chg($('orn_buy_chg'), L.orn_buy, prev.orn_buy); }
+  if (prev) { chg($('orn_sell_chg'), L.orn_sell, prev.orn_sell, prev.est); chg($('orn_buy_chg'), L.orn_buy, prev.orn_buy, prev.est); }
 
   const ind = Signal.indicators(rows.map(x => x.orn_sell));
   const s = Signal.score(ind);
